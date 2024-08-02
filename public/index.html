@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potato's pixel</title>
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <h1>Potato's pixel</h1>
+    <button class="inscription"><a href="inscription.html">Inscription</a></button>
+    <div id="color-selector">
+        
+        <button class="color-button" style="background-color: #000000;" data-color="#000000"></button>
+        <button class="color-button" style="background-color: #373737;" data-color="#373737"></button>
+        <button class="color-button" style="background-color: #a9a9a9;" data-color="#a9a9a9"></button>
+        <button class="color-button" style="background-color: #FFFFFF;" data-color="#FFFFFF"></button>
+        <button class="color-button" style="background-color: #00FF00;" data-color="#00FF00"></button>
+        <button class="color-button" style="background-color: #008000;" data-color="#008000"></button>
+        <button class="color-button" style="background-color: #004800;" data-color="#004800"></button>
+        <button class="color-button" style="background-color: #000e88;" data-color="#000e88"></button>
+        <button class="color-button" style="background-color: #0000FF;" data-color="#0000FF"></button>
+        <button class="color-button" style="background-color: #00FFFF;" data-color="#00FFFF"></button>
+        <button class="color-button" style="background-color: #FFFF00;" data-color="#FFFF00"></button>
+        <button class="color-button" style="background-color: #FFD700;" data-color="#FFD700"></button>
+        <button class="color-button" style="background-color: #FFA500;" data-color="#FFA500"></button>
+        <button class="color-button" style="background-color: #660202;" data-color="#660202"></button>
+        <button class="color-button" style="background-color: #A52A2A;" data-color="#A52A2A"></button>
+        <button class="color-button" style="background-color: #FF0000;" data-color="#FF0000"></button>
+        <button class="color-button" style="background-color: #800080;" data-color="#800080"></button>
+        <button class="color-button" style="background-color: #FF00FF;" data-color="#FF00FF"></button>
+        <button class="color-button" style="background-color: #FFC0CB;" data-color="#FFC0CB"></button>
+
+    </div>
+    </div>
+    <button id="toggle-scroll" style="font-size:24px"><i class="fa fa-hand-paper-o"> </i> </button>
+    <div id="grid"></div>
+    
+
+    <div id="chat">
+        <div id="messages"></div>
+        <input type="text" id="chat-input" placeholder="Type a message...">
+        <button id="send-button">Envoyer</button>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>

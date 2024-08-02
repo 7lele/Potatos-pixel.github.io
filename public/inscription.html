@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potato Pixel</title>
+    <link rel="stylesheet" href="/public/inscription.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Potato Pixel</h1>
+        <div id="form-container">
+            <form id="register-form">
+                <h2>Inscription</h2>
+                <input type="text" id="register-username" placeholder="Nom d'utilisateur" required>
+                <input type="password" id="register-password" placeholder="Mot de passe" required>
+                <button type="submit">S'inscrire</button>
+                <p>Déjà un compte ? <a href="#" id="show-login">Se connecter</a></p>
+            </form>
+
+            <form id="login-form" style="display: none;">
+                <h2>Connexion</h2>
+                <input type="text" id="login-username" placeholder="Nom d'utilisateur" required>
+                <input type="password" id="login-password" placeholder="Mot de passe" required>
+                <button type="submit">Se connecter</button>
+                <p>Pas encore de compte ? <a href="#" id="show-register">S'inscrire</a></p>
+            </form>
+        </div>
+        <div id="welcome-message" style="display: none;">
+            <h2>Bienvenue, <span id="user-name"></span>!</h2>
+            <button id="logout-button">Déconnexion</button>
+        </div>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>

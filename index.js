@@ -143,3 +143,53 @@ document.addEventListener("DOMContentLoaded", () => {
         grid.scrollTop = scrollTop - walkY;
     });
 });
+
+
+
+
+
+//* j'ai peur a partir du code en dessous
+
+
+
+
+document.getElementById('show-login').addEventListener('click', function() {
+    document.getElementById('register-form').style.display = 'none';
+    document.getElementById('login-form').style.display = 'block';
+});
+
+document.getElementById('show-register').addEventListener('click', function() {
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('register-form').style.display = 'block';
+});
+
+document.getElementById('register-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const username = document.getElementById('register-username').value;
+    const password = document.getElementById('register-password').value;
+    localStorage.setItem(username, password);
+    alert('Inscription réussie! Vous pouvez maintenant vous connecter.');
+    document.getElementById('register-form').reset();
+    document.getElementById('login-form').style.display = 'block';
+    document.getElementById('register-form').style.display = 'none';
+});
+
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+    const storedPassword = localStorage.getItem(username);
+    if (storedPassword === password) {
+        alert('Connexion réussie!');
+        document.getElementById('user-name').textContent = username;
+        document.getElementById('form-container').style.display = 'none';
+        document.getElementById('welcome-message').style.display = 'block';
+    } else {
+        alert('Nom d\'utilisateur ou mot de passe incorrect.');
+    }
+});
+
+document.getElementById('logout-button').addEventListener('click', function() {
+    document.getElementById('welcome-message').style.display = 'none';
+    document.getElementById('form-container').style.display = 'block';
+});

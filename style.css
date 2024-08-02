@@ -4,6 +4,7 @@ body {
     flex-direction: column;
     align-items: center;
     background-color: rgb(10, 12, 12);
+    color: #ccc;
 }
 
 #color-selector {
@@ -32,6 +33,8 @@ body {
     margin-top: 20px;
     width: 300px;
     background-color: aliceblue;
+    color: black;
+   
 }
 
 #messages {

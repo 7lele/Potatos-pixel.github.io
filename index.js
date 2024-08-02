@@ -9,8 +9,6 @@ const firebaseConfig = {
     appId: "1:757808950099:web:c7d5eeffd4c68ef2ad4fa6",
     
   };
-
-
 // Wait for the DOM to be fully loaded before initializing Firebase
 document.addEventListener("DOMContentLoaded", () => {
     firebase.initializeApp(firebaseConfig);
@@ -18,16 +16,25 @@ document.addEventListener("DOMContentLoaded", () => {
     // Reference to the database
     const db = firebase.database();
 
+    // Initialize selected color
+    let selectedColor = '#000000'; // Default color
+
+    // Handle color button clicks
+    document.querySelectorAll('.color-button').forEach(button => {
+        button.addEventListener('click', () => {
+            selectedColor = button.getAttribute('data-color');
+        });
+    });
+
     // Create the grid
     const grid = document.getElementById('grid');
     for (let i = 0; i < 2500; i++) {  // 50x50 = 2500
         const cell = document.createElement('div');
         cell.className = 'grid-cell';
         cell.addEventListener('click', () => {
-            const color = document.getElementById('color-picker').value;
-            cell.style.backgroundColor = color;
+            cell.style.backgroundColor = selectedColor;
             // Save the color to Firebase
-            db.ref('grid/' + i).set(color);
+            db.ref('grid/' + i).set(selectedColor);
         });
         grid.appendChild(cell);
     }

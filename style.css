@@ -12,9 +12,13 @@ body {
 
 #grid {
     display: grid;
-    grid-template-columns: repeat(50, 20px); 
-    grid-template-rows: repeat(50, 20px); 
+    grid-template-columns: repeat(50, 20px);  /* 50 colonnes */
+    grid-template-rows: repeat(50, 20px);  /* 50 lignes */
     gap: 1px;
+    max-width: 100%;  
+    max-height: 700px;  
+    overflow: auto;  
+    border: 1px solid #ccc; 
 }
 
 .grid-cell {
@@ -43,4 +47,9 @@ body {
 
 #send-button {
     width: 90px;
+}
+
+
+#toggle-scroll {
+    margin-top: 20px;
 }

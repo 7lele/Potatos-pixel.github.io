@@ -64,7 +64,12 @@ body {
 
 #toggle-scroll {
     margin-top: 20px;
-    margin-bottom: 1px;
+    margin-bottom: 5px;
+    border: none;
+    border-radius: 10%;
+    width: 40px;
+    height: 40px;
+    border: solid,beige,2px;
 }
 .color-button {
     width: 40px;
@@ -72,5 +77,14 @@ body {
     border: solid,beige,2px;
     border-radius: 10%;
     cursor: pointer;
+    transition: 300ms;
     
+}
+.color-button:hover{
+    margin-left: 10px;
+    margin-right: 10px;
+    border: solid,rgb(188, 101, 15),2px;
+}
+.color-button:active{
+    width: 10px;
 }

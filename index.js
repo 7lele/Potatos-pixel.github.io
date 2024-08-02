@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Create the grid
     const grid = document.getElementById('grid');
-    for (let i = 0; i < 2500; i++) {  // 50x50 = 2500
+    for (let i = 0; i < 10000; i++) {  // 50x50 = 2500
         const cell = document.createElement('div');
         cell.className = 'grid-cell';
         cell.addEventListener('click', () => {

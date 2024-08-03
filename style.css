@@ -88,3 +88,12 @@ body {
 .color-button:active{
     width: 15px;
 }
+
+#login-button{
+    width: 200px;
+    height: 40px;
+    color: black;
+    font-size: larger;
+    border: solid,beige,2px;
+    border-radius: 10px;
+}

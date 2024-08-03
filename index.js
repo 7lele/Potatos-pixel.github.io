@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Reference to the database
     const db = firebase.database();
+    const auth = firebase.auth();
 
     // Initialize selected color
     let selectedColor = '#000000'; // Default color
@@ -28,13 +29,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Create the grid
     const grid = document.getElementById('grid');
-    for (let i = 0; i < 10000; i++) {  // 50x50 = 2500
+    for (let i = 0; i < 10000; i++) {  // 100x100 = 10000
         const cell = document.createElement('div');
         cell.className = 'grid-cell';
         cell.addEventListener('click', () => {
-            cell.style.backgroundColor = selectedColor;
-            // Save the color to Firebase
-            db.ref('grid/' + i).set(selectedColor);
+            if (auth.currentUser) {
+                cell.style.backgroundColor = selectedColor;
+                // Save the color to Firebase
+                db.ref('grid/' + i).set(selectedColor);
+            } else {
+                alert("You need to be logged in to place a pixel.");
+            }
         });
         grid.appendChild(cell);
     }
@@ -57,12 +62,17 @@ document.addEventListener("DOMContentLoaded", () => {
     sendButton.addEventListener('click', () => {
         const message = chatInput.value;
         if (message) {
-            // Save the message to Firebase
-            db.ref('chat').push({
-                message,
-                timestamp: new Date().toISOString()
-            });
-            chatInput.value = '';
+            if (auth.currentUser) {
+                // Save the message to Firebase
+                db.ref('chat').push({
+                    message,
+                    timestamp: new Date().toISOString(),
+                    user: auth.currentUser.displayName
+                });
+                chatInput.value = '';
+            } else {
+                alert("You need to be logged in to send a message.");
+            }
         }
     });
 
@@ -70,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     db.ref('chat').on('child_added', (snapshot) => {
         const messageData = snapshot.val();
         const messageElement = document.createElement('div');
-        messageElement.textContent = messageData.message;
+        messageElement.textContent = `${messageData.user}: ${messageData.message}`;
         messages.appendChild(messageElement);
         messages.scrollTop = messages.scrollHeight;
     });
@@ -142,33 +152,30 @@ document.addEventListener("DOMContentLoaded", () => {
         grid.scrollLeft = scrollLeft - walkX;
         grid.scrollTop = scrollTop - walkY;
     });
+
+    // Authentication
+    const loginButton = document.getElementById('login-button');
+    const logoutButton = document.getElementById('logout-button');
+    const userInfo = document.getElementById('user-info');
+
+    loginButton.addEventListener('click', () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider);
+    });
+
+    logoutButton.addEventListener('click', () => {
+        auth.signOut();
+    });
+
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            userInfo.textContent = `Logged in as ${user.displayName}`;
+            loginButton.style.display = 'none';
+            logoutButton.style.display = 'block';
+        } else {
+            userInfo.textContent = 'Not logged in';
+            loginButton.style.display = 'block';
+            logoutButton.style.display = 'none';
+        }
+    });
 });
-
-
-
-
- // Authentication
- const loginButton = document.getElementById('login-button');
- const logoutButton = document.getElementById('logout-button');
- const userInfo = document.getElementById('user-info');
-
- loginButton.addEventListener('click', () => {
-     const provider = new firebase.auth.GoogleAuthProvider();
-     auth.signInWithPopup(provider);
- });
-
- logoutButton.addEventListener('click', () => {
-     auth.signOut();
- });
-
- auth.onAuthStateChanged(user => {
-     if (user) {
-         userInfo.textContent = `Logged in as ${user.displayName}`;
-         loginButton.style.display = 'none';
-         logoutButton.style.display = 'block';
-     } else {
-         userInfo.textContent = 'Not logged in';
-         loginButton.style.display = 'block';
-         logoutButton.style.display = 'none';
-     }
- });

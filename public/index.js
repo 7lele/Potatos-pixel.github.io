@@ -9,6 +9,7 @@ const firebaseConfig = {
     appId: "1:757808950099:web:c7d5eeffd4c68ef2ad4fa6",
     
   };
+
 // Wait for the DOM to be fully loaded before initializing Firebase
 document.addEventListener("DOMContentLoaded", () => {
     firebase.initializeApp(firebaseConfig);
@@ -63,13 +64,22 @@ document.addEventListener("DOMContentLoaded", () => {
         const message = chatInput.value;
         if (message) {
             if (auth.currentUser) {
-                // Save the message to Firebase
-                db.ref('chat').push({
-                    message,
-                    timestamp: new Date().toISOString(),
-                    user: auth.currentUser.displayName
+                const userId = auth.currentUser.uid;
+                // Retrieve the user's username from the database
+                db.ref('users/' + userId + '/username').once('value').then((snapshot) => {
+                    const username = snapshot.val();
+                    if (username) {
+                        // Save the message to Firebase
+                        db.ref('chat').push({
+                            message,
+                            timestamp: new Date().toISOString(),
+                            user: username
+                        });
+                        chatInput.value = '';
+                    } else {
+                        alert("Username not set.");
+                    }
                 });
-                chatInput.value = '';
             } else {
                 alert("You need to be logged in to send a message.");
             }
@@ -157,6 +167,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginButton = document.getElementById('login-button');
     const logoutButton = document.getElementById('logout-button');
     const userInfo = document.getElementById('user-info');
+    const usernameModal = document.getElementById('username-modal');
+    const usernameInput = document.getElementById('username-input');
+    const setUsernameButton = document.getElementById('set-username-button');
 
     loginButton.addEventListener('click', () => {
         const provider = new firebase.auth.GoogleAuthProvider();
@@ -169,13 +182,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     auth.onAuthStateChanged(user => {
         if (user) {
-            userInfo.textContent = `Logged in as ${user.displayName}`;
+            const userId = user.uid;
+            db.ref('users/' + userId).once('value').then((snapshot) => {
+                if (!snapshot.exists()) {
+                    // Show the username modal if the user doesn't have a username set
+                    usernameModal.style.display = 'block';
+                } else {
+                    const userData = snapshot.val();
+                    userInfo.textContent = `Logged in as ${userData.username}`;
+                }
+            });
             loginButton.style.display = 'none';
             logoutButton.style.display = 'block';
         } else {
             userInfo.textContent = 'Not logged in';
             loginButton.style.display = 'block';
             logoutButton.style.display = 'none';
+        }
+    });
+
+    setUsernameButton.addEventListener('click', () => {
+        const username = usernameInput.value;
+        if (username) {
+            const userId = auth.currentUser.uid;
+            db.ref('users/' + userId).set({
+                username: username
+            }).then(() => {
+                usernameModal.style.display = 'none';
+                userInfo.textContent = `Logged in as ${username}`;
+            });
         }
     });
 });

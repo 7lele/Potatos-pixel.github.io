@@ -172,4 +172,3 @@ document.addEventListener("DOMContentLoaded", () => {
          logoutButton.style.display = 'none';
      }
  });
-});

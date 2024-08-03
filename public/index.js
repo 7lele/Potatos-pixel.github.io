@@ -18,9 +18,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const db = firebase.database();
     const auth = firebase.auth();
 
-    // Initialize selected color
+    // Initialize selected color and brush mode
     let selectedColor = '#000000'; // Default color
     let isBrushMode = false; // Track brush mode status
+    let pixelsPlaced = 0; // Counter for placed pixels
+    const maxPixelsBeforeDelay = 20; // Max pixels before delay
+    let delayTimeout = 0; // For managing delay timeout
+    let countdownInterval; // For managing countdown interval
 
     // Handle color button clicks
     document.querySelectorAll('.color-button').forEach(button => {
@@ -36,9 +40,19 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.className = 'grid-cell';
         cell.addEventListener('click', () => {
             if (auth.currentUser) {
+                if (delayTimeout > 0) {
+                    // Skip coloring and inform user to wait
+                    return;
+                }
+                if (pixelsPlaced >= maxPixelsBeforeDelay) {
+                    // Start delay timer
+                    startDelay();
+                    return;
+                }
                 cell.style.backgroundColor = selectedColor;
                 // Save the color to Firebase
                 db.ref('grid/' + i).set(selectedColor);
+                pixelsPlaced++;
             } else {
                 alert("You need to be logged in to place a pixel.");
             }
@@ -109,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggleBrushButton = document.getElementById('toggle-brush');
     toggleBrushButton.addEventListener('click', () => {
         isBrushMode = !isBrushMode;
-        toggleBrushButton.textContent = isBrushMode ? "X" : "O";
+        toggleBrushButton.textContent = isBrushMode ? "O" : "X";
     });
 
     // Add brush functionality
@@ -117,9 +131,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const paintCell = (cell) => {
         if (auth.currentUser && isBrushMode) {
+            if (delayTimeout > 0) {
+                return;
+            }
+            if (pixelsPlaced >= maxPixelsBeforeDelay) {
+                startDelay();
+                return;
+            }
             cell.style.backgroundColor = selectedColor;
             const index = Array.from(grid.children).indexOf(cell);
             db.ref('grid/' + index).set(selectedColor);
+            pixelsPlaced++;
         }
     };
 
@@ -208,4 +230,23 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     });
+
+    // Start delay countdown
+    function startDelay() {
+        delayTimeout = 3; // Set delay time
+        pixelsPlaced = 0; // Reset pixel counter
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+        }
+        countdownInterval = setInterval(() => {
+            delayTimeout--;
+            if (delayTimeout <= 0) {
+                clearInterval(countdownInterval);
+                delayTimeout = 0;
+                userInfo.textContent = `Logged in as ${auth.currentUser.displayName}`; // Reset to username after delay
+            } else {
+                userInfo.textContent = `Logged in as ${auth.currentUser.displayName} - Wait ${delayTimeout}s to place more pixels`;
+            }
+        }, 1000);
+    }
 });

@@ -109,6 +109,7 @@ body {
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
 }
 
 .modal-content {
@@ -119,4 +120,5 @@ body {
     width: 80%;
     max-width: 400px;
     text-align: center;
+    border-radius: 10px;
 }

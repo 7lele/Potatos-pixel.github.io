@@ -147,8 +147,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+ // Authentication
+ const loginButton = document.getElementById('login-button');
+ const logoutButton = document.getElementById('logout-button');
+ const userInfo = document.getElementById('user-info');
 
-//* j'ai peur a partir du code en dessous
+ loginButton.addEventListener('click', () => {
+     const provider = new firebase.auth.GoogleAuthProvider();
+     auth.signInWithPopup(provider);
+ });
 
+ logoutButton.addEventListener('click', () => {
+     auth.signOut();
+ });
 
-
+ auth.onAuthStateChanged(user => {
+     if (user) {
+         userInfo.textContent = `Logged in as ${user.displayName}`;
+         loginButton.style.display = 'none';
+         logoutButton.style.display = 'block';
+     } else {
+         userInfo.textContent = 'Not logged in';
+         loginButton.style.display = 'block';
+         logoutButton.style.display = 'none';
+     }
+ });
+});

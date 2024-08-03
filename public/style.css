@@ -71,6 +71,16 @@ body {
     height: 40px;
     border: solid,beige,2px;
 }
+
+#toggle-brush {
+    margin-top: 20px;
+    margin-bottom: 5px;
+    border: none;
+    border-radius: 10%;
+    width: 40px;
+    height: 40px;
+    border: solid,beige,2px;
+}
 .color-button {
     width: 40px;
     height: 40px;

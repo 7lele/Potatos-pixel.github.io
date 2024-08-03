@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initialize selected color
     let selectedColor = '#000000'; // Default color
+    let isBrushMode = false; // Track brush mode status
 
     // Handle color button clicks
     document.querySelectorAll('.color-button').forEach(button => {
@@ -104,63 +105,57 @@ document.addEventListener("DOMContentLoaded", () => {
         grid.style.overflow = isScrollable ? 'auto' : 'hidden';
     });
 
-    // Add drag functionality for moving the grid
-    let isDragging = false;
-    let startX, startY, scrollLeft, scrollTop;
+    // Toggle brush mode
+    const toggleBrushButton = document.getElementById('toggle-brush');
+    toggleBrushButton.addEventListener('click', () => {
+        isBrushMode = !isBrushMode;
+        toggleBrushButton.textContent = isBrushMode ? "X" : "O";
+    });
+
+    // Add brush functionality
+    let isPainting = false;
+
+    const paintCell = (cell) => {
+        if (auth.currentUser && isBrushMode) {
+            cell.style.backgroundColor = selectedColor;
+            const index = Array.from(grid.children).indexOf(cell);
+            db.ref('grid/' + index).set(selectedColor);
+        }
+    };
 
     grid.addEventListener('mousedown', (e) => {
-        if (!isScrollable) {
-            isDragging = true;
-            startX = e.pageX - grid.offsetLeft;
-            startY = e.pageY - grid.offsetTop;
-            scrollLeft = grid.scrollLeft;
-            scrollTop = grid.scrollTop;
+        if (isBrushMode) {
+            isPainting = true;
+            paintCell(e.target);
         }
     });
 
-    grid.addEventListener('mouseleave', () => {
-        isDragging = false;
-    });
-
     grid.addEventListener('mouseup', () => {
-        isDragging = false;
+        isPainting = false;
     });
 
     grid.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const x = e.pageX - grid.offsetLeft;
-        const y = e.pageY - grid.offsetTop;
-        const walkX = (x - startX) * 2; // Multiply by 2 for faster scrolling
-        const walkY = (y - startY) * 2;
-        grid.scrollLeft = scrollLeft - walkX;
-        grid.scrollTop = scrollTop - walkY;
+        if (isPainting && isBrushMode) {
+            paintCell(e.target);
+        }
     });
 
-    // Add touch functionality for moving the grid on mobile devices
+    // Add touch functionality for brush mode on mobile devices
     grid.addEventListener('touchstart', (e) => {
-        if (!isScrollable) {
-            isDragging = true;
-            startX = e.touches[0].pageX - grid.offsetLeft;
-            startY = e.touches[0].pageY - grid.offsetTop;
-            scrollLeft = grid.scrollLeft;
-            scrollTop = grid.scrollTop;
+        if (isBrushMode) {
+            isPainting = true;
+            paintCell(e.target);
         }
     });
 
     grid.addEventListener('touchend', () => {
-        isDragging = false;
+        isPainting = false;
     });
 
     grid.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const x = e.touches[0].pageX - grid.offsetLeft;
-        const y = e.touches[0].pageY - grid.offsetTop;
-        const walkX = (x - startX) * 2;
-        const walkY = (y - startY) * 2;
-        grid.scrollLeft = scrollLeft - walkX;
-        grid.scrollTop = scrollTop - walkY;
+        if (isPainting && isBrushMode) {
+            paintCell(e.target);
+        }
     });
 
     // Authentication

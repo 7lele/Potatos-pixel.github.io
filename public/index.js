@@ -9,6 +9,7 @@ const firebaseConfig = {
     appId: "1:757808950099:web:c7d5eeffd4c68ef2ad4fa6",
     
   };
+
 // Wait for the DOM to be fully loaded before initializing Firebase
 document.addEventListener("DOMContentLoaded", () => {
     firebase.initializeApp(firebaseConfig);
@@ -40,9 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.addEventListener('click', () => {
             if (auth.currentUser) {
                 if (delayTimeout > 0) {
+                    // Skip coloring and inform user to wait
                     return;
                 }
                 if (pixelsPlaced >= maxPixelsBeforeDelay) {
+                    // Start delay timer
                     startDelay();
                     return;
                 }
@@ -177,73 +180,67 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Authentication
-    const loginButton = document.getElementById('login-button');
-    const logoutButton = document.getElementById('logout-button');
-    const userInfo = document.getElementById('user-info');
-    const usernameModal = document.getElementById('username-modal');
-    const usernameInput = document.getElementById('username-input');
-    const setUsernameButton = document.getElementById('set-username-button');
+    // Start delay function
+    const startDelay = () => {
+        pixelsPlaced = 0;
+        delayTimeout = 3; // 3 seconds delay
+        updateDelayText();
+        countdownInterval = setInterval(() => {
+            delayTimeout--;
+            updateDelayText();
+            if (delayTimeout <= 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('user-info').textContent = auth.currentUser.displayName;
+            }
+        }, 1000);
+    };
 
-    loginButton.addEventListener('click', () => {
+    // Update delay text function
+    const updateDelayText = () => {
+        if (auth.currentUser) {
+            document.getElementById('user-info').textContent = `${auth.currentUser.displayName} - Wait ${delayTimeout}s`;
+        }
+    };
+
+    // Firebase authentication
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            document.getElementById('user-info').textContent = user.displayName;
+            document.getElementById('login-button').style.display = 'none';
+            document.getElementById('logout-button').style.display = 'inline';
+            // Check if username is set
+            db.ref('users/' + user.uid + '/username').once('value').then((snapshot) => {
+                if (!snapshot.val()) {
+                    document.getElementById('username-modal').style.display = 'block';
+                }
+            });
+        } else {
+            document.getElementById('user-info').textContent = 'Not logged in';
+            document.getElementById('login-button').style.display = 'inline';
+            document.getElementById('logout-button').style.display = 'none';
+        }
+    });
+
+    document.getElementById('login-button').addEventListener('click', () => {
         const provider = new firebase.auth.GoogleAuthProvider();
         auth.signInWithPopup(provider);
     });
 
-    logoutButton.addEventListener('click', () => {
+    document.getElementById('logout-button').addEventListener('click', () => {
         auth.signOut();
     });
 
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            const userId = user.uid;
-            db.ref('users/' + userId).once('value').then((snapshot) => {
-                if (!snapshot.exists()) {
-                    // Show the username modal if the user doesn't have a username set
-                    usernameModal.style.display = 'block';
-                } else {
-                    const userData = snapshot.val();
-                    userInfo.textContent = `Logged in as ${userData.username}`;
-                }
-            });
-            loginButton.style.display = 'none';
-            logoutButton.style.display = 'block';
-        } else {
-            userInfo.textContent = 'Not logged in';
-            loginButton.style.display = 'block';
-            logoutButton.style.display = 'none';
-        }
-    });
-
-    setUsernameButton.addEventListener('click', () => {
-        const username = usernameInput.value;
-        if (username) {
-            const userId = auth.currentUser.uid;
-            db.ref('users/' + userId).set({
+    // Set username
+    document.getElementById('set-username-button').addEventListener('click', () => {
+        const username = document.getElementById('username-input').value;
+        if (auth.currentUser && username) {
+            db.ref('users/' + auth.currentUser.uid).set({
                 username: username
             }).then(() => {
-                usernameModal.style.display = 'none';
-                userInfo.textContent = `Logged in as ${username}`;
+                document.getElementById('username-modal').style.display = 'none';
             });
+        } else {
+            alert('Please enter a username.');
         }
     });
-
-    // Start delay countdown
-    function startDelay() {
-        delayTimeout = 3; // Set delay time
-        pixelsPlaced = 0; // Reset pixel counter
-        if (countdownInterval) {
-            clearInterval(countdownInterval);
-        }
-        countdownInterval = setInterval(() => {
-            delayTimeout--;
-            if (delayTimeout <= 0) {
-                clearInterval(countdownInterval);
-                delayTimeout = 0;
-                userInfo.textContent = `Logged in as ${auth.currentUser.displayName}`; // Reset to username after delay
-            } else {
-                userInfo.textContent = `Logged in as ${auth.currentUser.displayName} - Wait ${delayTimeout}s to place more pixels`;
-            }
-        }, 1000);
-    }
 });

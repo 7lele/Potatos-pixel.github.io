@@ -9,7 +9,6 @@ const firebaseConfig = {
     appId: "1:757808950099:web:c7d5eeffd4c68ef2ad4fa6",
     
   };
-
 // Wait for the DOM to be fully loaded before initializing Firebase
 document.addEventListener("DOMContentLoaded", () => {
     firebase.initializeApp(firebaseConfig);

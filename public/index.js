@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let selectedColor = '#000000'; // Default color
     let isBrushMode = false; // Track brush mode status
     let pixelsPlaced = 0; // Counter for placed pixels
-    const maxPixelsBeforeDelay = 10; // Max pixels before delay
+    const maxPixelsBeforeDelay = 30; // Max pixels before delay
     let delayTimeout = 0; // For managing delay timeout
     let countdownInterval; // For managing countdown interval
 

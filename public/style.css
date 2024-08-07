@@ -15,18 +15,18 @@ body {
     width: 1000px;
     height: 1000px;
     display: grid;
-    grid-template-columns: repeat(1000, 10px);
-    grid-template-rows: repeat(1000, 10px);
+    grid-template-columns: repeat(1000, 1px);
+    grid-template-rows: repeat(1000, 1px);
     background-image: url('./Terre.png');
-    background-size: cover;
+    background-size: auto;
     cursor: pointer;
 }
 
 .grid-cell {
-    width: 10px;
-    height: 10px;
+    width: 1px;
+    height: 1px;
     box-sizing: border-box;
-    border: 1px solid #ddd;
+    border: 0.1px solid #ddd;
 }
 
 #chat {

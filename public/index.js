@@ -9,7 +9,6 @@ const firebaseConfig = {
     appId: "1:757808950099:web:c7d5eeffd4c68ef2ad4fa6",
     
   };
-
 // Wait for the DOM to be fully loaded before initializing Firebase
 document.addEventListener("DOMContentLoaded", () => {
     firebase.initializeApp(firebaseConfig);
@@ -22,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let selectedColor = '#000000'; // Default color
     let isBrushMode = false; // Track brush mode status
     let pixelsPlaced = 0; // Counter for placed pixels
-    const maxPixelsBeforeDelay = 20; // Max pixels before delay
+    const maxPixelsBeforeDelay = 10; // Max pixels before delay
     let delayTimeout = 0; // For managing delay timeout
     let countdownInterval; // For managing countdown interval
 
@@ -35,17 +34,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Create the grid
     const grid = document.getElementById('grid');
-    for (let i = 0; i < 10000; i++) {  // 100x100 = 10000
+    for (let i = 0; i < 1000000; i++) {  // 1000x1000 = 1000000
         const cell = document.createElement('div');
         cell.className = 'grid-cell';
         cell.addEventListener('click', () => {
             if (auth.currentUser) {
                 if (delayTimeout > 0) {
-                    // Skip coloring and inform user to wait
                     return;
                 }
                 if (pixelsPlaced >= maxPixelsBeforeDelay) {
-                    // Start delay timer
                     startDelay();
                     return;
                 }
@@ -123,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggleBrushButton = document.getElementById('toggle-brush');
     toggleBrushButton.addEventListener('click', () => {
         isBrushMode = !isBrushMode;
-        toggleBrushButton.textContent = isBrushMode ? "O" : "X";
+        toggleBrushButton.textContent = isBrushMode ? "Brush Mode ON" : "Brush Mode OFF";
     });
 
     // Add brush functionality

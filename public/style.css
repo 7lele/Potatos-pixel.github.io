@@ -13,20 +13,22 @@ body {
 
 #grid {
     display: grid;
-    grid-template-columns: repeat(100, 20px);  /* 50 colonnes */
-    grid-template-rows: repeat(100, 20px);  /* 50 lignes */
-    gap: 1px;
-    max-width: 100%;  
-    max-height: 700px;  
-    overflow: auto;  
-    border: 1px solid #ccc; 
+    grid-template-columns: repeat(1000, 1px);
+    grid-template-rows: repeat(1000, 1px);
+    width: 1000px;
+    height: 1000px;
+    background: url('./Terre.png') no-repeat center center;
+    background-size: cover;
+    overflow: auto;
+    cursor: pointer;
+    position: relative;
 }
 
 .grid-cell {
-    background-color: white;
-    width: 20px;
-    height: 20px;
-    border: 1px solid #ccc;
+    width: 1px;
+    height: 1px;
+    box-sizing: border-box;
+    border: 1px solid rgba(0,0,0,0.1); /* Optional: Makes the grid visible */
 }
 
 #chat {

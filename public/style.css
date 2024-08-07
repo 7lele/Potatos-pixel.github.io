@@ -15,16 +15,17 @@ body {
     width: 1000px;
     height: 1000px;
     display: grid;
-    grid-template-columns: repeat(1000, 1px);
-    grid-template-rows: repeat(1000, 1px);
+    grid-template-columns: repeat(1000, 10px);
+    grid-template-rows: repeat(1000, 10px);
     background-image: url('./Terre.png');
-    background-size: auto;
+    background-size: contain;
     cursor: pointer;
+    background-color: white;
 }
 
 .grid-cell {
-    width: 1px;
-    height: 1px;
+    width: 10px;
+    height: 10px;
     box-sizing: border-box;
     border: 0.1px solid #ddd;
 }

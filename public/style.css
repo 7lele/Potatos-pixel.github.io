@@ -12,13 +12,15 @@ body {
 }
 
 #grid {
-    width: 1000px;
-    height: 1000px;
+    width: max-content;
+    height: 100%;
     display: grid;
     grid-template-columns: repeat(1000, 10px);
     grid-template-rows: repeat(1000, 10px);
     background-image: url('./Terre.png');
-    background-size: contain;
+
+    background-repeat: no-repeat;
+    background-size: 2500px,2500px;
     cursor: pointer;
     background-color: white;
 }
@@ -27,7 +29,8 @@ body {
     width: 10px;
     height: 10px;
     box-sizing: border-box;
-    border: 0.1px solid #ddd;
+    border: 0.05px solid #5c5c5c;
+
 }
 
 #chat {
